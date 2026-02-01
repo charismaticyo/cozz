@@ -8,10 +8,25 @@ dotenv.config({ path: '.env.local' });
 dotenv.config(); // Also try .env as fallback
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from production build
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// SPA Fallback: Redirect any other request to index.html (frontend routing)
+// Express 5 requires regex or (.*) for wildcard
+app.get(/^(?!\/api).+/, (req, res, next) => {
+  // Ignore API calls if any matched above (though explicit routes usually take precedence)
+  if (req.url.startsWith('/create-web-call')) return next();
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 const retellClient = new Retell({
   apiKey: process.env.RETELL_API_KEY,
