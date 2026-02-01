@@ -96,7 +96,10 @@ export const RetellCall = () => {
         setMessages([]);
 
         try {
-            const response = await fetch("http://localhost:3000/create-web-call", {
+            const endpoint = "/create-web-call";
+            console.log("Connecting to backend at:", window.location.origin + endpoint);
+
+            const response = await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
             });
