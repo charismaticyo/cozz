@@ -56,4 +56,5 @@ app.post('/create-web-call', async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log(`Environment PORT variable: ${process.env.PORT || 'Not Set (using default)'}`);
 });
